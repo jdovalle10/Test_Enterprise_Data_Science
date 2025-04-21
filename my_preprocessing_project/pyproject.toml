@@ -1,28 +1,32 @@
 [project]
-name = "my-preprocessing-project"
-version = "0.1.0"
-description = ""
-authors = [
-    {name = "Juan David Ovalle",email = "jovalle717@gmail.com"}
+name            = "my-preprocessing-project"
+version         = "0.1.0"
+description     = ""
+authors         = [
+  { name = "Juan David Ovalle", email = "jovalle717@gmail.com" }
 ]
-readme = "README.md"
+readme          = "README.md"
 requires-python = ">=3.10,<4.0"
-package-mode = false 
 
 dependencies = [
-    "pandas (>=2.2.3,<3.0.0)",
-    "numpy (>=2.2.5,<3.0.0)",
-    "scikit-learn (>=1.6.1,<2.0.0)",
-    "pyyaml (>=6.0.2,<7.0.0)"
+  "pandas (>=2.2.3,<3.0.0)",
+  "numpy (>=2.2.5,<3.0.0)",
+  "scikit-learn (>=1.6.1,<2.0.0)",
+  "pyyaml (>=6.0.2,<7.0.0)",
+  "catboost (>=1.2.8,<2.0.0)",
+  "lightgbm (>=4.6.0,<5.0.0)",
+  "xgboost (>=3.0.0,<4.0.0)",
 ]
 
-[tool.poetry]
+[tool.poetry]            
+package-mode = false     
 
 [tool.poetry.group.dev.dependencies]
-missingno = "^0.5.2"
-matplotlib = "^3.10.1"
-seaborn = "^0.13.2"
+missingno   = "^0.5.2"
+matplotlib  = "^3.10.1"
+seaborn     = "^0.13.2"
 
 [build-system]
-requires = ["poetry-core>=2.0.0,<3.0.0"]
+requires      = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
+
