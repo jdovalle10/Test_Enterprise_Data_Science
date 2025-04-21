@@ -1,0 +1,37 @@
+
+# Data paths
+data:
+  raw: 'superstore_data.csv'
+  dictionary: 'datadictionary.xlsx'
+  processed:
+    train: 'train.parquet'
+    validation: 'val.parquet'
+    test: 'test.parquet'
+
+# Preprocessing configurations
+preprocessing:
+  missing_values:
+    drop_threshold: 0.70
+    imputation_method: 'median'
+  feature_engineering:
+    clustering:
+      n_clusters: 6
+      random_state: 42
+    scaling_method: 'standard'
+    skewness_threshold: 1.0
+    recategorization:
+      education:
+        PhD: 'Post Graduate'
+        Master: 'Post Graduate'
+        2n Cycle: 'Graduate'
+        Graduation: 'Graduate'
+        Basic: 'Pre Graduate'
+      marital_status:
+        Married: 'Married'
+        Together: 'Together'
+        Single: 'Single'
+        Divorced: 'Divorced'
+        Widow: 'Widow'
+        Alone: 'Single'
+        YOLO: 'Single'
+        Absurd: 'Single'
