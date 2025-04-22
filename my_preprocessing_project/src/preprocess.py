@@ -37,46 +37,47 @@ def load_data():
     return data
 
 
-def handle_missing_values(data):
+def drop_high_null_cols(df: pd.DataFrame, drop_threshold: float) -> pd.DataFrame:
+    """Drop columns with more than `drop_threshold` fraction of missing values."""
+    null_pct = df.isnull().mean()
+    to_drop  = null_pct[null_pct > drop_threshold].index.tolist()
+    if to_drop:
+        logger.info(f"Dropping columns: {to_drop}")
+        df = df.drop(columns=to_drop)
+    return df
+
+
+def impute_numeric(df: pd.DataFrame, method: str) -> pd.DataFrame:
+    """Impute numeric columns using the specified method."""
+    num_cols = df.select_dtypes(include=["number"]).columns
+    if method == "median":
+        for c in num_cols:
+            if df[c].isnull().any():
+                df[c].fillna(df[c].median(), inplace=True)
+    elif method == "mean":
+        for c in num_cols:
+            if df[c].isnull().any():
+                df[c].fillna(df[c].mean(), inplace=True)
+    return df
+
+
+def impute_categorical(df: pd.DataFrame, method: str) -> pd.DataFrame:
+    """Impute object columns using mode (only meaningful for 'mode')."""
+    if method == "mode":
+        for c in df.select_dtypes(include=["object"]).columns:
+            if df[c].isnull().any():
+                df[c].fillna(df[c].mode()[0], inplace=True)
+    return df
+
+
+def handle_missing_values(data: pd.DataFrame) -> pd.DataFrame:
     """Handle missing values according to config."""
-    # Get preprocessing config
-    preproc_config = get_preprocessing_config()
-    missing_values_config = preproc_config.get("missing_values", {})
-
-    # Drop columns with high percentage of missing values
-    drop_threshold = missing_values_config.get("drop_threshold", 0.7)
-    logger.info(f"Dropping columns with more than {drop_threshold*100}% missing values")
-
-    # Calculate missing percentage for all columns at once
-    missing_percentages = data.isnull().mean()
-    cols_to_drop = missing_percentages[missing_percentages > drop_threshold].index.tolist()
-
-    if cols_to_drop:
-        logger.info(f"Dropping columns: {cols_to_drop}")
-        data = data.drop(columns=cols_to_drop)
-
-    # Impute missing values
-    imputation_method = missing_values_config.get("imputation_method", "median")
-    logger.info(f"Imputing missing values using {imputation_method} method")
-
-    # Apply imputation based on method
-    if imputation_method == "median":
-        for col in data.select_dtypes(include=['number']).columns:
-            if data[col].isnull().any():
-                logger.info(f"Imputing missing values in {col} with median")
-                data[col] = data[col].fillna(data[col].median())
-    elif imputation_method == "mean":
-        for col in data.select_dtypes(include=['number']).columns:
-            if data[col].isnull().any():
-                logger.info(f"Imputing missing values in {col} with mean")
-                data[col] = data[col].fillna(data[col].mean())
-    elif imputation_method == "mode":
-        for col in data.select_dtypes(include=['object']).columns:
-            if data[col].isnull().any():
-                logger.info(f"Imputing missing values in {col} with mode")
-                data[col] = data[col].fillna(data[col].mode()[0])
-
+    cfg = get_preprocessing_config()["missing_values"]
+    data = drop_high_null_cols(data, cfg["drop_threshold"])
+    data = impute_numeric(data, cfg["imputation_method"])
+    data = impute_categorical(data, cfg["imputation_method"])
     return data
+
 
 
 def clean_column_names(data):

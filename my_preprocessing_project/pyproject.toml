@@ -16,6 +16,7 @@ dependencies = [
   "catboost (>=1.2.8,<2.0.0)",
   "lightgbm (>=4.6.0,<5.0.0)",
   "xgboost (>=3.0.0,<4.0.0)",
+  "pyarrow (>=19.0.1,<20.0.0)",
 ]
 
 [tool.poetry]            
@@ -25,6 +26,7 @@ package-mode = false
 missingno   = "^0.5.2"
 matplotlib  = "^3.10.1"
 seaborn     = "^0.13.2"
+ruff = "^0.11.6"
 
 [build-system]
 requires      = ["poetry-core>=2.0.0,<3.0.0"]
